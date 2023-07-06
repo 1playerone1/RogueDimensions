@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -15,14 +16,17 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(GetMesh());
-	CameraBoom->TargetArmLength = 600.f;
-	CameraBoom->bUsePawnControlRotation = true;
+	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	// CameraBoom->SetupAttachment(GetMesh());
+	// CameraBoom->TargetArmLength = 600.f;
+	// CameraBoom->bUsePawnControlRotation = true;
 
-	FPCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPCamera"));
-	FPCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FPCamera->bUsePawnControlRotation = true;
+	// FPCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPCamera"));
+	// FPCamera->SetupAttachment(GetMesh());
+	// FPCamera->bUsePawnControlRotation = true;
+
+	bUseControllerRotationYaw = true;
+	// GetCharacterMovement()->bOrientRotationToMovement = false;
 
 }
 
