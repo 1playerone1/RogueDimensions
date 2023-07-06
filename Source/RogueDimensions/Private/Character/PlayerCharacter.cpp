@@ -9,6 +9,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -27,6 +28,9 @@ APlayerCharacter::APlayerCharacter()
 
 	bUseControllerRotationYaw = true;
 	// GetCharacterMovement()->bOrientRotationToMovement = false;
+
+	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
+	OverheadWidget->SetupAttachment(RootComponent);
 
 }
 
