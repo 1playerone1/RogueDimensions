@@ -3,13 +3,12 @@
 
 #include "PlayerCharacter.h"
 
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/WidgetComponent.h"
+#include "Net/UnrealNetwork.h"
+#include "RogueDimensions/Weapon/Weapon.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -17,21 +16,18 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	// CameraBoom->SetupAttachment(GetMesh());
-	// CameraBoom->TargetArmLength = 600.f;
-	// CameraBoom->bUsePawnControlRotation = true;
-
-	// FPCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPCamera"));
-	// FPCamera->SetupAttachment(GetMesh());
-	// FPCamera->bUsePawnControlRotation = true;
-
 	bUseControllerRotationYaw = true;
-	// GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
 	OverheadWidget->SetupAttachment(RootComponent);
 
+}
+
+void APlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(APlayerCharacter, OverlappingWeapon, COND_OwnerOnly);
 }
 
 // Called when the game starts or when spawned
@@ -112,4 +108,33 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+void APlayerCharacter::SetOverlappingWeapon(AWeapon* Weapon)
+{
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->ShowPickupWidget(false);
+	}
+	OverlappingWeapon = Weapon;
+	if (IsLocallyControlled())
+	{
+		if (OverlappingWeapon)
+		{
+			OverlappingWeapon->ShowPickupWidget(true);
+		}
+	}
+}
+
+void APlayerCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
+{
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->ShowPickupWidget(true);
+	}
+	if (LastWeapon)
+	{
+		LastWeapon->ShowPickupWidget(false);
+	}
+}
+
 

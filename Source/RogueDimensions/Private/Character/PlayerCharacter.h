@@ -18,6 +18,8 @@ class APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 // Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -51,16 +53,17 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 private:
-	// UPROPERTY(VisibleAnywhere, Category = Camera)
-	// class USpringArmComponent* CameraBoom;
-
-	// UPROPERTY(VisibleAnywhere, Category = Camera)
-	// class UCameraComponent* FPCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* OverheadWidget;
 
+	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
+	class AWeapon* OverlappingWeapon;
+
+	UFUNCTION()
+	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
+
 public:	
-	
+	void SetOverlappingWeapon(AWeapon* Weapon);
 
 };
