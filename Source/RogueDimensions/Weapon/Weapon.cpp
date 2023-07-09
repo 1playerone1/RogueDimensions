@@ -62,10 +62,10 @@ void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	APlayerCharacter* BlasterCharacter = Cast<APlayerCharacter>(OtherActor);
-	if (BlasterCharacter)
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+	if (PlayerCharacter)
 	{
-		BlasterCharacter->SetOverlappingWeapon(nullptr);
+		PlayerCharacter->SetOverlappingWeapon(nullptr);
 	}
 }
 
